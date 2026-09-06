@@ -1,0 +1,162 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --accent-color: #38bdf8;
+    --text-color: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+header {
+    background-color: var(--card-bg);
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.dashboard {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.card:active {
+    transform: scale(0.96);
+    background-color: var(--border-color);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.content-container {
+    padding: 16px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.breadcrumb {
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.list-item {
+    background-color: var(--card-bg);
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: #0f172a;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    cursor: pointer;
+}
+
+.media-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #000;
+}
+
+video {
+    width: 100%;
+    max-height: 50vh;
+    background-color: #000;
+}
+
+.player-controls {
+    padding: 16px;
+    background-color: var(--card-bg);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    background-color: var(--accent-color);
+    color: #0f172a;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}

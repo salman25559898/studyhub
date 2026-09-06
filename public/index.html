@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <button id="back-btn" class="nav-btn" onclick="goBack()" style="display:none;">&#8592;</button>
+        <span id="header-title">Study Hub</span>
+    </header>
+
+    <div id="dashboard" class="dashboard">
+        <div class="card" onclick="openSection('lectures')"><span class="card-icon">🎥</span><span class="card-title">Lectures</span></div>
+        <div class="card" onclick="openSection('notes')"><span class="card-icon">📝</span><span class="card-title">Notes</span></div>
+        <div class="card" onclick="openSection('pdfs')"><span class="card-icon">📄</span><span class="card-title">PDF Books</span></div>
+        <div class="card" onclick="openSection('screenshots')"><span class="card-icon">📸</span><span class="card-title">Screenshots</span></div>
+        <div class="card" onclick="openSection('music')"><span class="card-icon">🎵</span><span class="card-title">Entertainment</span></div>
+    </div>
+
+    <div id="content-view" class="content-container" style="display:none;">
+        <div id="items-list" class="list-group"></div>
+    </div>
+
+    <div id="video-view" class="media-container" style="display:none; flex-direction:column; align-items:center;">
+        <video id="main-video" controls style="width:100%; max-width:800px; height:auto;"></video>
+        <div class="player-controls" style="margin-top:10px;">
+            <button class="btn" onclick="takeScreenshot()">📸 Screenshot</button>
+            <select id="speed-select" class="btn" onchange="changeSpeed(this.value)">
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1.0x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2.0x</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="fab-options" style="display:none; position:fixed; bottom:20px; right:20px; gap:10px;">
+        <button class="btn" onclick="createFolderPrompt()">📁 New Folder</button>
+        <button class="btn" style="background-color:#22c55e; color:white;" onclick="triggerFileUpload()">⬆️ Upload File</button>
+    </div>
+
+    <input type="file" id="file-input" style="display:none;" onchange="uploadFile(event)">
+
+    <script src="app.js"></script>
+</body>
+</html>

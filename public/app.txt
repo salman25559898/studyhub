@@ -1,0 +1,135 @@
+let currentSection = '';
+let currentFolderId = null;
+let folderHistory = [];
+
+function openSection(section) {
+    currentSection = section;
+    currentFolderId = null;
+    folderHistory = [];
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('content-view').style.display = 'block';
+    document.getElementById('back-btn').style.display = 'inline';
+    document.getElementById('fab-options').style.display = 'flex';
+    document.getElementById('header-title').innerText = section.toUpperCase();
+    loadFolderContent();
+}
+
+function goBack() {
+    if (document.getElementById('video-view').style.display === 'flex') {
+        document.getElementById('video-view').style.display = 'none';
+        document.getElementById('content-view').style.display = 'block';
+        document.getElementById('fab-options').style.display = 'flex';
+        const video = document.getElementById('main-video');
+        video.pause();
+        return;
+    }
+
+    if (folderHistory.length > 0) {
+        currentFolderId = folderHistory.pop();
+        loadFolderContent();
+    } else {
+        document.getElementById('dashboard').style.display = 'grid';
+        document.getElementById('content-view').style.display = 'none';
+        document.getElementById('back-btn').style.display = 'none';
+        document.getElementById('fab-options').style.display = 'none';
+        document.getElementById('header-title').innerText = 'Study Hub';
+    }
+}
+
+async function loadFolderContent() {
+    const listContainer = document.getElementById('items-list');
+    listContainer.innerHTML = '<div>Loading...</div>';
+
+    try {
+        const resFolders = await fetch(`/api/folders?type=${currentSection}&parentId=${currentFolderId || ''}`);
+        const folders = await resFolders.json();
+
+        const resMedia = await fetch(`/api/media?type=${currentSection}&folderId=${currentFolderId || ''}`);
+        const media = await resMedia.json();
+
+        listContainer.innerHTML = '';
+
+        folders.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.innerHTML = `<span>📁 ${f.name}</span>`;
+            item.onclick = () => {
+                folderHistory.push(currentFolderId);
+                currentFolderId = f.id;
+                loadFolderContent();
+            };
+            listContainer.appendChild(item);
+        });
+
+        media.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            item.innerHTML = `<span>🎬 ${m.name}</span>`;
+            item.onclick = () => playMedia(m);
+            listContainer.appendChild(item);
+        });
+
+        if (folders.length === 0 && media.length === 0) {
+            listContainer.innerHTML = '<div style="padding:20px; color:gray;">Folder khali hai. File upload karein!</div>';
+        }
+    } catch (err) {
+        listContainer.innerHTML = '<div>Error loading content!</div>';
+    }
+}
+
+function createFolderPrompt() {
+    const name = prompt("Folder Ka Naam:");
+    if (name) {
+        fetch('/api/folders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, type: currentSection, parentId: currentFolderId })
+        }).then(() => loadFolderContent());
+    }
+}
+
+function triggerFileUpload() {
+    document.getElementById('file-input').click();
+}
+
+async function uploadFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', currentSection);
+    formData.append('folderId', currentFolderId || '');
+
+    await fetch('/api/media/upload', { method: 'POST', body: formData });
+    loadFolderContent();
+}
+
+function playMedia(item) {
+    document.getElementById('content-view').style.display = 'none';
+    document.getElementById('fab-options').style.display = 'none';
+    
+    const videoView = document.getElementById('video-view');
+    const video = document.getElementById('main-video');
+    
+    videoView.style.display = 'flex';
+    video.src = item.url;
+    video.play();
+}
+
+function changeSpeed(val) {
+    document.getElementById('main-video').playbackRate = parseFloat(val);
+}
+
+function takeScreenshot() {
+    const video = document.getElementById('main-video');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `Screenshot_${Date.now()}.png`;
+    a.click();
+}
